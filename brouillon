@@ -1,128 +1,57 @@
-import subprocess
-import wolframalpha
-import tkinter
-import json
-import operator
-import datetime
-import wikipedia
-import webbrowser
-import os
-import winshell
-import pyjokes
-import feedparser
-import smtplib
-import ctypes
-import time
-import requests
-import shutil
-#from client.textui import progress
-from bs4 import BeautifulSoup
-import win32com.client as wincl
-from urllib.request import urlopen
 
+    elif "who made you" in query or "who created you" in query:
+        speak("I have been created by Gaurav.")
 
-import chitchat
-import dialogs
-import random
-from assistant import Assistant
+    elif 'joke' in query:
+        speak(pyjokes.get_joke())
 
-
-
-
-#------Main--------#
-
-Jarvis = Assistant()
-while True:
-
-    query = Jarvis.engine.takeCommand().lower()
-
-    if 'stop' or 'pause' in query:
-        if 'stop' in query:
-            Jarvis.engine.speak('Tres bien, je termine les processus')
-            Jarvis.engine.speak(dialogs.Aurevoir[random.randint(0, len(dialogs.Aurevoir)-1)])
-            exit()
-
-        elif 'pause' in query:
-            Jarvis.engine.speak('Tres bien, je me met en pause, pressez une touche pour me reveiller')
-            Jarvis.engine.speak(dialogs.Aurevoir[random.randint(0, len(dialogs.Aurevoir) - 1)])
-            programPause = input("Pressez une touche ...")
-            Jarvis.engine.speak(dialogs.Salutation[random.randint(0, len(dialogs.Salutation) - 2)])
-
-    if 'wikipedia' in query:
-        Jarvis.engine.speak('Je cherche sur Wikipédia...')
-        query = query.replace("wikipedia", "")
-        results = wikipedia.summary(query, sentences=3)
-        Jarvis.engine.speak("Selon wikipedia")
-        Jarvis.engine.speak(results)
-
-    elif 'ouvre youtube' in query:
-        Jarvis.engine.speak("Voilà Youtube\n")
-        webbrowser.open("youtube.com")
-
-    elif 'ouvre google' in query:
-        Jarvis.engine.speak('Souhaitez vous cherchez quelque-chose de particulier')
-        answer = Jarvis.engine.takeCommand().lower()
-        if 'oui' in answer:
-            Jarvis.engine.speak('Sur quel sujet ?')
-            commande = Jarvis.engine.takeCommand()
-            webbrowser.open(commande)
-        elif 'non' in answer:
-            Jarvis.engine.speak("Et voici Google\n")
-            webbrowser.open("google.com")
-
-    elif 'ouvre stackoverflow' in query:
-        Jarvis.engine.speak("Stackoverflow est ouvert. Bonne programmation ")
-        webbrowser.open("stackoverflow.com")
-
-    elif 'met de la musique' in query or "met une chanson" in query or "deezer" in query :
-        #ici mettre de la musique
-        pass
-
-    elif 'heure' in query:
-        strTime = str(datetime.datetime.now())
-        Jarvis.engine.speak(f"Il est actuelement {strTime[11:13]} heure {strTime[14:16]}")
-
-
-    elif 'send a mail' in query:
-        try:
-            Jarvis.engine.speak("What should I say?")
-            content = Jarvis.engine.takeCommand()
-            Jarvis.engine.speak("whome should i send")
-            to = input()
-            sendEmail(to, content)
-            Jarvis.engine.speak("Email has been sent !")
-        except Exception as e:
-            print(e)
-            Jarvis.engine.speak("I am not able to send this email")
-
-    elif 'comment vas tu' in query:
-        Jarvis.engine.speak(dialogs.ReponseSante[random.randint(0, len(dialogs.ReponseSante)-1)])
-        #mettre de la response
-
-    elif "quel est ton nom" in query or "comment t'appeles tu" in query:
-        Jarvis.engine.speak("Je m'appelle Jarvis et je suis la pour vous aider")
-
-
-    elif "Qui t'as créé" in query or "qui t'a fait" in query:
-        Jarvis.engine.speak("J'ai été créé par notre maitre à tous, Valentin.")
-
-    elif 'blaques' in query:
-        blague = chitchat.faitMoiUneBlague()
-        Jarvis.engine.speak(blague[0])
-        Jarvis.engine.speak(blague[1])
-
-    elif "calcule" in query:
+    elif "calculate" in query:
 
         app_id = "Wolframalpha api id"
         client = wolframalpha.Client(app_id)
-        indx = query.lower().split().index('calcule')
+        indx = query.lower().split().index('calculate')
         query = query.split()[indx + 1:]
         res = client.query(' '.join(query))
         answer = next(res.results).text
-        Jarvis.engine.speak("La réponse est " + answer)
+        print("The answer is " + answer)
+        speak("The answer is " + answer)
 
+    elif 'search' in query or 'play' in query:
 
+        query = query.replace("search", "")
+        query = query.replace("play", "")
+        webbrowser.open(query)
 
+    elif "who i am" in query:
+        speak("If you talk then definitely your human.")
+
+    elif "why you came to world" in query:
+        speak("Thanks to Gaurav. further It's a secret")
+
+    elif 'power point presentation' in query:
+        speak("opening Power Point presentation")
+        power = r"C:\\Users\\GAURAV\\Desktop\\Minor Project\\Presentation\\Voice Assistant.pptx"
+        os.startfile(power)
+
+    elif 'is love' in query:
+        speak("It is 7th sense that destroy all other senses")
+
+    elif "who are you" in query:
+        speak("I am your virtual assistant created by Gaurav")
+
+    elif 'reason for you' in query:
+        speak("I was created as a Minor project by Mister Gaurav ")
+
+    elif 'change background' in query:
+        ctypes.windll.user32.SystemParametersInfoW(20,
+                                                   0,
+                                                   "Location of wallpaper",
+                                                   0)
+        speak("Background changed successfully")
+
+    elif 'open bluestack' in query:
+        appli = r"C:\\ProgramData\\BlueStacks\\Client\\Bluestacks.exe"
+        os.startfile(appli)
 
     elif 'news' in query:
 
@@ -205,6 +134,27 @@ while True:
         print(file.read())
         speak(file.read(6))
 
+    elif "update assistant" in query:
+        speak("After downloading file please replace this file with the downloaded one")
+        url = '# url after uploading file'
+        r = requests.get(url, stream=True)
+
+        with open("Voice.py", "wb") as Pypdf:
+
+            total_length = int(r.headers.get('content-length'))
+
+            for ch in progress.bar(r.iter_content(chunk_size=2391975),
+                                   expected_size=(total_length / 1024) + 1):
+                if ch:
+                    Pypdf.write(ch)
+
+    # NPPR9-FWDCX-D2C8J-H872K-2YT43
+    elif "jarvis" in query:
+
+        wishMe()
+        speak("Jarvis 1 point o in your service Mister")
+        speak(assname)
+
     elif "weather" in query:
 
         # Google Open weather website
@@ -233,3 +183,48 @@ while True:
         else:
             speak(" City Not Found ")
 
+    elif "send message " in query:
+        # You need to create an account on Twilio to use this service
+        account_sid = 'Account Sid key'
+        auth_token = 'Auth token'
+        client = Client(account_sid, auth_token)
+
+        message = client.messages \
+            .create(
+            body=takeCommand(),
+            from_='Sender No',
+            to='Receiver No'
+        )
+
+        print(message.sid)
+
+    elif "wikipedia" in query:
+        webbrowser.open("wikipedia.com")
+
+    elif "Good Morning" in query:
+        speak("A warm" + query)
+        speak("How are you Mister")
+        speak(assname)
+
+    # most asked question from google Assistant
+    elif "will you be my gf" in query or "will you be my bf" in query:
+        speak("I'm not sure about, may be you should give me some time")
+
+    elif "how are you" in query:
+        speak("I'm fine, glad you me that")
+
+    elif "i love you" in query:
+        speak("It's hard to understand")
+
+    elif "what is" in query or "who is" in query:
+
+        # Use the same API key
+        # that we have generated earlier
+        client = wolframalpha.Client("API_ID")
+        res = client.query(query)
+
+        try:
+            print(next(res.results).text)
+            speak(next(res.results).text)
+        except StopIteration:
+            print("No results")
